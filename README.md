@@ -4,7 +4,7 @@
 
 **Contributors:**  
 - **Sid** ([[GitHub](https://github.com/Siddharthj2002)]([[LinkedIn](https://www.linkedin.com/in/siddharthj2002/)]  
-- **Sejal Agarwal** ([[GitHub](Github Link)]([[LinkedIn](LinkedIn Link)]  
+- **Sejal Agarwal** ([[GitHub](https://github.com/Sejal135)]([[LinkedIn](https://www.linkedin.com/in/sejal-agarwal/)]  
 
 ---
 
