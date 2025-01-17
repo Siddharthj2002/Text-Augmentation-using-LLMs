@@ -1,137 +1,101 @@
-# Text Augmentation using LLMs
 
-### Improving Text Classification by Generating Augmented Text for Under-represented Categories
+# Text Augmentation Using Large Language Models (LLMs)
 
-**Contributors:**  
-- **Sid** ([[GitHub](https://github.com/Siddharthj2002)]([[LinkedIn](https://www.linkedin.com/in/siddharthj2002/)]  
-- **Sejal Agarwal** ([[GitHub](https://github.com/Sejal135)]([[LinkedIn](https://www.linkedin.com/in/sejal-agarwal/)]  
-
----
+## Introduction
+This project explores the potential of leveraging Large Language Models (LLMs) such as GPT-2 to augment text data for handling class imbalance in text classification tasks. Using the AG News dataset, class imbalances were deliberately introduced to evaluate how LLM-based text augmentation compares against traditional methods like SMOTE in improving model performance.
 
 ## Table of Contents
-1. [Project Overview](#project-overview)
-2. [Motivation](#motivation)
+1. [Introduction](#introduction)
+2. [Objectives](#objectives)
 3. [Dataset](#dataset)
-4. [Project Structure](#project-structure)
-5. [Usage](#usage)
-6. [Collaborators and Version Control](#collaborators-and-version-control)
-7. [Results and Evaluation](#results-and-evaluation)
-8. [Future Work](#future-work)
-9. [References](#references)
+4. [Features](#features)
+5. [Methodology](#methodology)
+6. [Installation](#installation)
+7. [Usage](#usage)
+8. [Results & Analysis](#results--analysis)
+9. [Future Work](#future-work)
+10. [Contributors](#contributors)
+11. [License](#license)
 
----
-
-## Project Overview
-This project aims to improve the performance of text classification models by generating augmented text using Large Language Models (LLMs) for under-represented categories. The dataset used is the **AG News dataset**, where we artificially create an imbalance and use LLMs like GPT-4 and BERT to generate additional samples for the minority classes.
-
----
-
-## Motivation
-Many real-world datasets are imbalanced, leading to poor model performance on under-represented classes. In this project, we explore how text augmentation using LLMs can enhance classification performance by generating synthetic text for minority classes. The focus is on improving recall and precision for these classes using various augmentation techniques.
-
----
+## Objectives
+- **Simulate Real-World Imbalances:** Introduce controlled imbalances in the AG News dataset and analyze their effects on classification performance.
+- **Experiment with Balancing Techniques:** Compare traditional methods like SMOTE with LLM-generated synthetic data for minority class augmentation.
+- **Evaluate Model Performance:** Assess performance using metrics like accuracy, precision, recall, and F1-score, emphasizing improvements for underrepresented classes.
 
 ## Dataset
-We use the [AG News Dataset](https://huggingface.co/datasets/fancyzhx/ag_news) from Hugging Face. It contains 120,000 training samples and 7,600 test samples across four categories:
-- **World** 
-- **Sports**
-- **Business**
-- **Science/Technology**
+The project uses the AG News dataset:
+- **Source:** News articles categorized into four classes: World, Sports, Business, and Science/Technology.
+- **Structure:**
+  - Training Set: 120,000 samples (30,000 per class)
+  - Test Set: 7,600 samples (1,900 per class)
+- **Deliberate Modifications:** Science/Technology class instances were reduced using techniques like under-sampling and topic-specific sampling to simulate imbalances.
 
-We manually reduce the **Science/Technology** and **Business** categories to create an imbalanced dataset.
+## Features
+- **Class Imbalance Handling:** Investigates four imbalance creation techniques: severe under-sampling, topic-specific sampling, clustered minority sampling, and progressive rarity imbalances.
+- **Augmentation Methods:**
+  - Traditional: SMOTE
+  - Advanced: LLM-generated synthetic text using GPT-2.
+- **Model Training:** Logistic Regression and Support Vector Machines (SVM) trained with TF-IDF vectorization.
+- **Evaluation Metrics:** Accuracy, Precision, Recall, and F1-score.
 
----
+## Methodology
+### Data Preparation
+- **Preprocessing:** Text converted to lowercase, punctuation and digits removed, duplicates and missing values filtered.
+- **Feature Extraction:** TF-IDF vectorization to transform text into numerical representations.
 
-## Project Structure
+### Augmentation
+- **SMOTE:** Generates synthetic samples for minority classes using interpolation.
+- **LLM (GPT-2):** Contextually prompted synthetic text generation tailored for each imbalance type.
 
-The main components of this project are as follows:
+### Model Training
+- Logistic Regression and SVM were optimized using GridSearchCV for hyperparameter tuning and stratified cross-validation to ensure robust performance across classes.
 
-```bash
-├── data/                   # Folder for raw and processed datasets
-├── notebooks/              # Google Colab notebooks
-├── models/                 # Trained models
-├── src/                    # Python scripts for data processing and model training
-├── results/                # Output results (metrics, graphs, etc.)
-├── README.md               # Project overview (this file)
-└── requirements.txt        # Required Python packages
-```
-
-- **notebooks/**: Contains the main Python notebooks for data exploration, augmentation, and model training.
-- **src/**: Contains Python scripts for preprocessing, augmentation, and model evaluation.
-
----
+## Installation
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/your-repo/text-augmentation-llm.git
+   ```
+2. Install dependencies:
+   ```bash
+   pip install -r requirements.txt
+   ```
+3. Download the AG News dataset via the Hugging Face library.
 
 ## Usage
+1. Preprocess the dataset:
+   ```bash
+   python preprocess.py --input data/ag_news.csv --output data/processed.csv
+   ```
+2. Create class imbalances:
+   ```bash
+   python create_imbalance.py --input data/processed.csv --method "clustered"
+   ```
+3. Augment data using GPT-2:
+   ```bash
+   python augment_llm.py --input data/imbalanced.csv --output data/augmented.csv
+   ```
+4. Train models:
+   ```bash
+   python train_model.py --input data/augmented.csv --model "logistic_regression"
+   ```
 
-### Clone the Repository
-To clone and run this project locally:
-
-```bash
-git clone https://github.com/your-repo/text-augmentation-using-llms.git
-cd text-augmentation-using-llms
-```
-
-### Install Dependencies
-Install the required Python libraries from `requirements.txt`:
-
-```bash
-pip install -r requirements.txt
-```
-
-### Run the Notebooks
-You can run the Colab notebooks for data augmentation, model training, and evaluation. Make sure you have the correct access to the datasets.
-
----
-
-## Collaborators and Version Control
-
-### Version Control using GitHub
-We are using **GitHub** for version control. Each collaborator works on their own branch and submits pull requests for code review before merging into the main branch.
+## Results & Analysis
+- **Balanced Dataset:** Logistic Regression and SVM achieved ~92% F1-scores.
+- **Imbalanced Dataset:** Performance on minority classes dropped significantly, with recalls often below 0.5.
+- **Augmentation Results:**
+  - SMOTE improved metrics but struggled in nuanced imbalance scenarios.
+  - GPT-2 augmentation achieved superior recall (~88.4%) and F1-scores, especially for progressive rarity imbalances.
   
-### Collaboration using Google Colab
-Both Sid and Sejal are collaborating using **Google Colab** for code development. Colab notebooks are linked to the shared GitHub repository for version control.
-
-- Data is stored in a **Google Drive** shared folder.
-- Changes are committed to the repository directly from Colab using **GitHub integration**.
-
----
-
-## Results and Evaluation
-
-The evaluation focuses on the following metrics:
-- **Accuracy**
-- **Precision**
-- **Recall**
-- **F1-score**
-- **Confusion Matrix**
-- **Class-wise Precision and Recall (focus on under-represented classes)**
-
-Visualizations include:
-- Precision-Recall curves
-- ROC curves
-- Confusion matrices
-
-We compare the model performance with and without text augmentation for minority classes.
-
----
+A detailed comparison of augmentation techniques showed that LLMs produced more semantically coherent and contextually diverse synthetic samples.
 
 ## Future Work
-In the future, we aim to:
-1. Explore more advanced augmentation techniques.
-2. Experiment with other LLMs or pre-trained models.
-3. Apply transfer learning to improve the generalization of the models.
+- **Enhance Augmentation:** Explore dynamic prompting for LLMs to generate more diverse and contextually relevant text.
+- **Advanced Models:** Incorporate transformer-based classifiers like BERT or RoBERTa for better performance.
+- **Real-World Validation:** Test methodologies on real-world datasets from domains like healthcare and finance.
 
----
+## Contributors
+- **Sejal Agarwal** (UMass Amherst) – [Email](mailto:sejalagarwal@umass.edu)
+- **Siddharth Jain** (UMass Amherst) – [Email](mailto:siddharthjai@umass.edu)
 
-## References
-1. Cegin, J., Simko, J., and Brusilovsky, P. (2024). LLMs vs Established Text Augmentation Techniques for Classification.
-2. Dai, H., et al. (2023). AugGPT: Leveraging ChatGPT for Text Data Augmentation.
-3. Wei, J., and Zou, K. (2019). EDA: Easy Data Augmentation Techniques for Boosting Performance on Text Classification Tasks.
-4. Ubani, S. O., et al. (2023). ZeroShotDataAug: Generating and Augmenting Training Data with ChatGPT.
-
----
-
-### How to Contribute
-If you would like to contribute to this project, feel free to fork the repository and submit a pull request. All contributions are welcome!
-
----
+## License
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
